@@ -2,27 +2,34 @@ import random
 import functools
 
 
-# TODO this is pretty inefficient
-def find_options(available_numbers, sum):
+def find_options(available_numbers, roll_sum):
     # search the set of available numbers to find all combinations that add up to the sum
-    # Return the set of all valid combinations, maybe as a list of lists
+    # Return the set of all valid combinations as a list of lists
     
     options = []
+    # logic assumes the numbers are sorted from small to large
+    available_numbers.sort()
     
-    # assumes the numbers are sorted from small to large
-    for i in range(len(available_numbers)):
-        current_number = available_numbers[i]
-        if current_number == sum:
-            options.append([current_number])
-        elif current_number < sum:
-            # find all combinations of other numbers that add up to sum - current_number
-            # don't need to look at smaller nums since ordered traversal assures their combos were already found
-            sub_options = find_options(available_numbers[i+1:], sum - current_number)
-            for sub in sub_options:
-                options.append([current_number] + sub[:])
-        else:
-            # sorted list means all later numbers are also > so we are done
-            break
+    # recursively search for valid combinations
+    def search(start_index, current_sum, current_option):
+        for i in range(start_index, len(available_numbers)):
+            current_number = available_numbers[i]
+            remaining_target = (roll_sum - current_sum)
+            
+            if current_number == remaining_target:
+                # current number is exactly the right size. Add to the options list
+                options.append(current_option[:] + [current_number])
+                break
+            elif current_number < remaining_target:
+                # find all combinations of other numbers that add up to sum - current_number
+                # don't need to look at smaller nums since ordered traversal assures their combos were already found
+                search(i+1, current_sum + current_number, current_option[:] + [current_number])
+            else:
+                # current is > target. sorted list means all later numbers are also > so we are done
+                break
+    
+    # run the recursive search to populate the options list
+    search(0, 0, [])
     
     return options
 
@@ -31,6 +38,7 @@ def run_game(strategy='highest'):
     log = {
         "strategy": strategy,
         "rolls": [],
+        "knockdowns": [],
         "score": None
         }
 
@@ -68,7 +76,7 @@ def run_game(strategy='highest'):
             chosen_option = functools.reduce(lambda x, y: x if max(x) > max(y) else y, options)
         
         print(f'Knocked Down:')
-        
+        log["knockdowns"].append(chosen_option)
         for num in chosen_option:
             paddles[num] = False
             print(num)
