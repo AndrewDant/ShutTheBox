@@ -8,11 +8,10 @@ Intended to allow me to simulate a large number of plays of the game Shut the Bo
     - Write high level pseudocode
     - pseudocode for helper functions
     - implement and test the helper functions
-    - TODO add the logic to switch from two dice to one
-3. Update the code to simulate an arbitrary number of games
-    - constant value or command line input the number
-    - probably just a for loop over the step two code
-4. Save game data to the disk
+3. Save game data to the disk
     - Need to think about what I care to save. Better too much than too little but could start simple
     - pick a format. Probably CSV
     - One table or multiple?
+4. Update the code to simulate an arbitrary number of games
+    - constant value or command line input the number
+    - probably just a for loop over the step two code

@@ -2,7 +2,7 @@ import random
 import functools
 
 
-# TODO this is probably pretty inefficient
+# TODO this is pretty inefficient
 def find_options(available_numbers, sum):
     # search the set of available numbers to find all combinations that add up to the sum
     # Return the set of all valid combinations, maybe as a list of lists
@@ -23,14 +23,17 @@ def find_options(available_numbers, sum):
         else:
             # sorted list means all later numbers are also > so we are done
             break
-        
     
     return options
 
 
-def main():
-    # random.seed(1)  # reproducability can be good for testing
-    
+def run_game(strategy='highest'):
+    log = {
+        "strategy": strategy,
+        "rolls": [],
+        "score": None
+        }
+
     paddles = { n: True for n in range(1, 11)}
     
     game_ongoing = True
@@ -46,6 +49,7 @@ def main():
         rolled_sum = die1 + die2
         
         print(f'\nRolled {die1} + {die2} = {rolled_sum}')
+        log["rolls"].append(rolled_sum)
         
         options = find_options([n for n, is_up in paddles.items() if is_up], rolled_sum)
         
@@ -55,6 +59,7 @@ def main():
             score = sum([n for n, is_up in paddles.items() if is_up])
             print(f'Game Over! Your final score was: {score}\nFinal state:{paddles}')
             game_ongoing = False
+            log["score"] = score
             continue
         elif len(options) == 1:
             chosen_option = options[0]
@@ -72,8 +77,13 @@ def main():
             # end the game!
             print('You managed to Shut The Box')
             game_ongoing = False
+            log["score"] = 0
             continue
+        
+    return log
 
 
 if __name__ == "__main__":
-    main()
+    # random.seed(1)  # reproducability can be good for testing
+    game_log = run_game()
+    print(game_log)
