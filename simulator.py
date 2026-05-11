@@ -99,7 +99,7 @@ if __name__ == "__main__":
     
     for game in range(GAME_COUNT):
         print(f'\n\nGAME {game}:\n')
-        game_log = run_game(strategies.highest_numbers)
+        game_log = run_game(strategies.highest_preserve_double)
         logs.append(game_log)
     
     FILENAME = "data.json"

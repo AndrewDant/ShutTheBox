@@ -4,11 +4,19 @@ DOUBLE_DICE_PADDLES = [7, 8, 9]
 
 
 def highest_numbers(options, paddles):
-    # TODO this currently doesn't handle == max's correctly
+    # solution has to look at all numbers since max # in an array could be equal and order isn't helpful
     # eg consider [[1,4,6], [2,3,6], [5,6]] as options
     # their order cannot tell you which to pick, since 5 > 4 > 3
-    
-    option_with_highest = lambda aggregate, current: aggregate if max(aggregate) > max(current) else current
+    def option_with_highest(aggregate, current):
+        result = aggregate
+        
+        for i in range(1, min(len(aggregate), len(current)) + 1):
+            # work backwards since the arrays are sorted.
+            if current[-i] != aggregate[-i]:
+                result = current if current[-i] > aggregate[-i] else aggregate
+                break
+        
+        return result
     
     # always knock down the highest number possible
     return functools.reduce(option_with_highest, options)
