@@ -1,6 +1,10 @@
 import random
 import json
 import strategies
+from inspect import getmembers, isfunction
+
+# get all the strategy funcs from the import in a single list
+strategy_list = [s[1] for s in getmembers(strategies, isfunction)]
 
 def find_options(available_numbers, roll_sum):
     # search the set of available numbers to find all combinations that add up to the sum
@@ -97,10 +101,11 @@ if __name__ == "__main__":
     logs = []
     GAME_COUNT = 100
     
-    for game in range(GAME_COUNT):
-        print(f'\n\nGAME {game}:\n')
-        game_log = run_game(strategies.highest_preserve_double)
-        logs.append(game_log)
+    for strategy in strategy_list:
+        for game in range(GAME_COUNT):
+            print(f'\n\nGAME {game}:\n')
+            game_log = run_game(strategy)
+            logs.append(game_log)
     
     FILENAME = "data.json"
     with open(FILENAME, "w") as f:
