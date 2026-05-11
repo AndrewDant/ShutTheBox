@@ -44,3 +44,11 @@ def highest_preserve_double(options, paddles):
         return highest_numbers(options_retaining_double, paddles)
     else:
         return highest_numbers(options, paddles)
+
+
+def preserve_double_until_10_is_down(options, paddles):
+    # if the 10 is still up try to preserve double dice. Once it's down just knock the highest
+    if paddles[10]:
+        return highest_preserve_double(options, paddles)
+    else:
+        return highest_numbers(options, paddles)

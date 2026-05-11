@@ -79,15 +79,14 @@ def run_game(strategy):
             # default strategy is to always knock down the highest number possible            
             chosen_option = strategy(options, paddles)
         
-        print(f'Knocked Down:')
+        print(f'Knocked Down: {", ".join([str(n) for n in chosen_option])}')
         log["knockdowns"].append(chosen_option)
         for num in chosen_option:
             paddles[num] = False
-            print(num)
             
         if True not in paddles.values():
             # end the game!
-            print('You managed to Shut The Box')
+            print(f'You managed to Shut The Box\nFinal state:{paddles}')
             game_ongoing = False
             log["score"] = 0
             continue
@@ -111,4 +110,4 @@ if __name__ == "__main__":
     with open(FILENAME, "w") as f:
         json.dump(logs, f)
     
-    print(game_log)
+    # print(logs)
