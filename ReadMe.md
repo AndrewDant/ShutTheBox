@@ -15,3 +15,4 @@ Intended to allow me to simulate a large number of plays of the game Shut the Bo
 4. Update the code to simulate an arbitrary number of games
     - constant value or command line input the number
     - probably just a for loop over the step two code
+5. Define multiple game strategies and update the game simulator to use a chosen one

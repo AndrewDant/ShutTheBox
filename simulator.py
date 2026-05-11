@@ -1,6 +1,6 @@
 import random
-import functools
-
+import json
+import strategies
 
 def find_options(available_numbers, roll_sum):
     # search the set of available numbers to find all combinations that add up to the sum
@@ -34,9 +34,9 @@ def find_options(available_numbers, roll_sum):
     return options
 
 
-def run_game(strategy='highest'):
+def run_game(strategy):
     log = {
-        "strategy": strategy,
+        "strategy": strategy.__name__,
         "rolls": [],
         "knockdowns": [],
         "score": None
@@ -73,7 +73,7 @@ def run_game(strategy='highest'):
             chosen_option = options[0]
         else:
             # default strategy is to always knock down the highest number possible            
-            chosen_option = functools.reduce(lambda x, y: x if max(x) > max(y) else y, options)
+            chosen_option = strategy(options, paddles)
         
         print(f'Knocked Down:')
         log["knockdowns"].append(chosen_option)
@@ -92,6 +92,18 @@ def run_game(strategy='highest'):
 
 
 if __name__ == "__main__":
-    # random.seed(1)  # reproducability can be good for testing
-    game_log = run_game()
+    # random.seed(1)  # reproducability could be good for testing
+    
+    logs = []
+    GAME_COUNT = 100
+    
+    for game in range(GAME_COUNT):
+        print(f'\n\nGAME {game}:\n')
+        game_log = run_game(strategies.highest_numbers)
+        logs.append(game_log)
+    
+    FILENAME = "data.json"
+    with open(FILENAME, "w") as f:
+        json.dump(logs, f)
+    
     print(game_log)
