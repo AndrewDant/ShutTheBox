@@ -16,3 +16,9 @@ Intended to allow me to simulate a large number of plays of the game Shut the Bo
     - constant value or command line input the number
     - probably just a for loop over the step two code
 5. Define multiple game strategies and update the game simulator to use a chosen one
+
+6. Write steps for EDA
+7. Start with a separate .ipynb file
+8. import the json data
+    - read the file into memory
+    - convert it into a pandas DataFrame?
