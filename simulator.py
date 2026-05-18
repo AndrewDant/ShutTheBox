@@ -38,29 +38,32 @@ def find_options(available_numbers, roll_sum):
     return options
 
 
-def run_game(strategy):
+def run_game(strategy, game):
+    game_index, game_rolls = game
+    
     log = {
         "strategy": strategy.__name__,
+        "game_index": game_index,
         "rolls": [],
         "knockdowns": [],
-        "score": None
-        }
+        "score": None,
+        "strategy_calls": 0
+    }
 
     paddles = { n: True for n in range(1, 11)}
     
-    game_ongoing = True
-    while game_ongoing:
-        # return two randomly generated dice results
-        die1 = random.randint(1, 6)
+    for roll in game_rolls:
+        die1 = roll[0]
         die2 = 0
         
         if paddles[7] or paddles[8] or paddles[9]:
             # only roll 1 die if 7/8/9 are all down
-            die2 = random.randint(1, 6)
+            die2 = roll[1]
             
         rolled_sum = die1 + die2
         
-        print(f'\nRolled {die1} + {die2} = {rolled_sum}')
+        if print_progress: print(f'\nRolled {die1} + {die2} = {rolled_sum}')
+        
         log["rolls"].append(rolled_sum)
         
         options = find_options([n for n, is_up in paddles.items() if is_up], rolled_sum)
@@ -69,45 +72,61 @@ def run_game(strategy):
         if len(options) == 0:
             # end the game!
             score = sum([n for n, is_up in paddles.items() if is_up])
-            print(f'Game Over! Your final score was: {score}\nFinal state:{paddles}')
-            game_ongoing = False
+            
+            if print_progress: print(f'Game Over! Your final score was: {score}\nFinal state:{paddles}')
+            
             log["score"] = score
-            continue
+            break
         elif len(options) == 1:
             chosen_option = options[0]
         else:
-            # default strategy is to always knock down the highest number possible            
+            # a strategy function should accept the list of possible options and the paddles state and return a single option
             chosen_option = strategy(options, paddles)
+            log["strategy_calls"] += 1
         
-        print(f'Knocked Down: {", ".join([str(n) for n in chosen_option])}')
+        if print_progress: print(f'Knocked Down: {", ".join([str(n) for n in chosen_option])}')
+        
         log["knockdowns"].append(chosen_option)
         for num in chosen_option:
             paddles[num] = False
             
         if True not in paddles.values():
             # end the game!
-            print(f'You managed to Shut The Box\nFinal state:{paddles}')
-            game_ongoing = False
+            if print_progress: print(f'You managed to Shut The Box\nFinal state:{paddles}')
+            
             log["score"] = 0
-            continue
+            break
         
     return log
 
 
 if __name__ == "__main__":
     # random.seed(1)  # reproducability could be good for testing
+    print_progress = False
     
     logs = []
-    GAME_COUNT = 100
+    games = []
+    GAME_COUNT = 10000
+    
+    for game_index in range(GAME_COUNT):
+        game_rolls = []
+        for i in range(10):
+            die1 = random.randint(1, 6)
+            die2 = random.randint(1, 6)
+            game_rolls.append((die1, die2))
+            
+        games.append((game_index, game_rolls))
     
     for strategy in strategy_list:
-        for game in range(GAME_COUNT):
-            print(f'\n\nGAME {game}:\n')
-            game_log = run_game(strategy)
+        for game in games:
+            if print_progress: print(f'\n\nGAME {game[0]}:\n')
+            
+            game_log = run_game(strategy, game)
             logs.append(game_log)
     
     FILENAME = "data.json"
     with open(FILENAME, "w") as f:
         json.dump(logs, f)
     
-    # print(logs)
+    # alt print when it ends if not printing during run
+    if not print_progress: print('Done!')
