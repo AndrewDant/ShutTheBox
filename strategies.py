@@ -62,7 +62,7 @@ def preserve_double_until_10_is_down(options, paddles):
         return highest_numbers(options, paddles)
 
 
-# minimizes the NUMBER of possible dead rolls next turn (not the odds of a dead roll)
+# TODO minimizes the NUMBER of possible dead rolls next turn (not the odds of a dead roll)
 def minimize_dead_rolls(options, paddles):
     # TODO duplicated logic for checking doubles preservation
     
@@ -96,6 +96,8 @@ def minimize_dead_rolls(options, paddles):
         # with 2 dice the possible rolls are 2 - 12
         for sum in range(2, 13):
             new_options = simulator.find_options(available_numbers, sum)
+            
+            # a sum will be considered dead if there are no combinations of still up paddles that add up to that sum
             if len(new_options) == 0:
                 dead_rolls += 1
         
@@ -120,7 +122,6 @@ def minimize_dead_rolls(options, paddles):
                 dead_rolls += 1
         
         if dead_rolls < min_dead_rolls:
-            # new best so we restart the list
             best_options = [option]
             min_dead_rolls = dead_rolls
         elif dead_rolls == min_dead_rolls:
