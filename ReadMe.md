@@ -1,6 +1,6 @@
 # Shut the Box Simulator
-WIP
-Intended to allow me to simulate a large number of plays of the game Shut the Box using different strategies, generating and saving data about the outcomes of each game (essentially Monte Carlo experiments)
+Simulates a large number of plays of the game Shut the Box using different strategies, generating and saving data about the outcomes of each game (essentially Monte Carlo experiments).
+Data Analysis to interpret the results of the experiments, comparing factors like the impact of strategy choice.
 
 ## Steps
 1. Writes some steps
@@ -16,9 +16,12 @@ Intended to allow me to simulate a large number of plays of the game Shut the Bo
     - constant value or command line input the number
     - probably just a for loop over the step two code
 5. Define multiple game strategies and update the game simulator to use a chosen one
-
 6. Write steps for EDA
 7. Start with a separate .ipynb file
 8. import the json data
     - read the file into memory
-    - convert it into a pandas DataFrame?
+    - convert it into a pandas DataFrame
+9. basic descriptive statistics for score, including grouping by strategy, first roll
+10. add graphs comparing score distributions for different strategies
+
+11. normalize first roll histograms
